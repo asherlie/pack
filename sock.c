@@ -3,8 +3,15 @@
 #include <net/ethernet.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include "shared.h"
 
 #include <stdio.h>
+
+_Bool verify_header(char* buf){
+      for(int i = 0; i < 8; ++i)
+            if(buf[i] != header[i])return 0;
+      return 1;
+}
 
 int main(){
       int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
@@ -23,14 +30,24 @@ int main(){
              * puts("");
             */
 
-            if((from.sll_addr[0] == 0x98 ||
-               from.sll_addr[0] == 0xdc ||
-               from.sll_addr[0] == 0x0a ||
-               *buf == 'f') &&
-               len == 4){
-                  puts("YA");
+            /*
+             * if(1 || ((from.sll_addr[0] == 0x98 ||
+             *    from.sll_addr[0] == 0xdc ||
+             *    from.sll_addr[0] == 0x74 ||
+             *    from.sll_addr[0] == 0x0a ||
+             *    *buf == 'm') &&
+             *    len == 4)){
+            */
+            /*if(!from.sll_addr[0] && !from.sll_addr[1] && !from.sll_addr[2]){*/
+            if(verify_header(buf)){
 
-                  printf("%i: \"%s\"\n", len, buf);
+                  printf("\n------------------------------\n%i bytes recvd\n",
+                        len-8);
+                  for(int i = 8; i < len; ++i){
+                        if(i%8 ==  0)putchar('\n');
+                        printf((buf[i] < 0) ? "%.3i " : "%.4i ", buf[i]);
+                  }
+
             }
             /*printf("%i\n", len);*/
       }
