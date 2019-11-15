@@ -24,21 +24,12 @@ int main(){
             memset(buf, 0, 1000);
 
             int len = recvfrom(sock, &buf, 1000, 0, (struct sockaddr*)&from, &sz);
-            /*
-             * printf("addr: ");
-             * for(int i = 0; i < 8; ++i)printf("%i ", from.sll_addr[i]);
-             * puts("");
-            */
+             /*
+              * printf("addr: ");
+              * for(int i = 0; i < 8; ++i)printf("%i ", from.sll_addr[i]);
+              * puts("");
+             */
 
-            /*
-             * if(1 || ((from.sll_addr[0] == 0x98 ||
-             *    from.sll_addr[0] == 0xdc ||
-             *    from.sll_addr[0] == 0x74 ||
-             *    from.sll_addr[0] == 0x0a ||
-             *    *buf == 'm') &&
-             *    len == 4)){
-            */
-            /*if(!from.sll_addr[0] && !from.sll_addr[1] && !from.sll_addr[2]){*/
             if(verify_header(buf)){
 
                   printf("\n------------------------------\n%i bytes recvd\n",
